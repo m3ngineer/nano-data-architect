@@ -1,3 +1,4 @@
+
 -- load data into jobs table
 Insert into jobs(job_nm)
 SELECT DISTINCT job_title
@@ -18,11 +19,11 @@ SELECT DISTINCT state FROM proj_stg;
 
 Insert into cities(city_nm, state_id)
 SELECT DISTINCT city, states.state_id FROM proj_stg
-JOIN states ON states.state_code = stg.state
+JOIN states ON states.state_code = proj_stg.state
 ;
 
-Insert into locations(address, location_nm, city_id)
-SELECT DISTINCT stg.address, stg.location, cities.city_id, states.state_id FROM proj_stg stg
+Insert into addresses(address, location_nm, city_id)
+SELECT DISTINCT stg.address, stg.location, cities.city_id FROM proj_stg stg
 JOIN cities ON cities.city_nm = stg.city
 ;
 

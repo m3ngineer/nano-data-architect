@@ -1,3 +1,14 @@
+
+DROP TABLE IF EXISTS jobs CASCADE;
+DROP TABLE IF EXISTS departments CASCADE;
+DROP TABLE IF EXISTS salaries CASCADE;
+DROP TABLE IF EXISTS education CASCADE;
+DROP TABLE IF EXISTS states CASCADE;
+DROP TABLE IF EXISTS cities CASCADE;
+DROP TABLE IF EXISTS addresses CASCADE;
+DROP TABLE IF EXISTS employees CASCADE;
+DROP TABLE IF EXISTS employee_hist CASCADE;
+
 CREATE TABLE jobs (
   job_id SERIAL PRIMARY KEY,
   job_nm varchar(50)
@@ -9,7 +20,7 @@ CREATE TABLE departments (
 );
 
 CREATE TABLE salaries (
-  salary_id VARCHAR(8) PRIMARY KEY,
+  salary_id SERIAL PRIMARY KEY,
   salary INT
 );
 
@@ -18,15 +29,15 @@ CREATE TABLE education (
   edu_lvl varchar(50)
 );
 
+CREATE TABLE states (
+  state_id SERIAL PRIMARY KEY,
+  state_code varchar(2)
+);
+
 CREATE TABLE cities (
   city_id SERIAL PRIMARY KEY,
   city_nm varchar(50),
   state_id INT REFERENCES states(state_id)
-);
-
-CREATE TABLE states (
-  state_id SERIAL PRIMARY KEY,
-  state_code varchar(2)
 );
 
 CREATE TABLE addresses (
