@@ -61,6 +61,6 @@ CREATE TABLE employee_hist (
   start_date DATE,
   end_date DATE,
   hiring_dept_id INT REFERENCES departments(dept_id),
-  location_id INT REFERENCES locations(location_id),
+  address_id INT REFERENCES addresses(address_id),
   salary_id INT REFERENCES salaries(salary_id)
 );
