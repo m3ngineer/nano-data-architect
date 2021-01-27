@@ -7,22 +7,23 @@ FROM proj_stg stg;
 Insert into departments(dept_nm)
 SELECT DISTINCT department_nm FROM proj_stg;
 
-Insert into salaries(employee_id, salary)
-SELECT DISTINCT Emp_ID, salary FROM proj_stg;
+Insert into salaries(salary)
+SELECT DISTINCT salary FROM proj_stg;
 
 Insert into education(edu_lvl)
 SELECT DISTINCT education_lvl FROM proj_stg;
 
-Insert into cities(city_nm)
-SELECT DISTINCT city FROM proj_stg;
-
 Insert into states(state_code)
 SELECT DISTINCT state FROM proj_stg;
 
-Insert into locations(location_nm, city_id, state_id)
-SELECT DISTINCT stg.location, cities.city_id, states.state_id FROM proj_stg stg
-JOIN cities ON cities.city_nm = stg.city
+Insert into cities(city_nm, state_id)
+SELECT DISTINCT city, states.state_id FROM proj_stg
 JOIN states ON states.state_code = stg.state
+;
+
+Insert into locations(address, location_nm, city_id)
+SELECT DISTINCT stg.address, stg.location, cities.city_id, states.state_id FROM proj_stg stg
+JOIN cities ON cities.city_nm = stg.city
 ;
 
 Insert into employees(employee_id, employee_nm, email, education_id)
@@ -37,9 +38,9 @@ SELECT DISTINCT
   stg.start_dt,
   stg.end_dt,
   dept.dept_id,
-  loc.location_id
+  add.address_id
 FROM proj_stg stg
 JOIN jobs ON jobs.job_nm = stg.job_title
 JOIN departments dept ON dept.dept_nm = stg.department_nm
-JOIN locations loc ON loc.location_nm = stg.location
+JOIN addresses add ON add.address = stg.address
 ;

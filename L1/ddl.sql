@@ -9,7 +9,7 @@ CREATE TABLE departments (
 );
 
 CREATE TABLE salaries (
-  employee_id VARCHAR(8) PRIMARY KEY,
+  salary_id VARCHAR(8) PRIMARY KEY,
   salary INT
 );
 
@@ -20,7 +20,8 @@ CREATE TABLE education (
 
 CREATE TABLE cities (
   city_id SERIAL PRIMARY KEY,
-  city_nm varchar(50)
+  city_nm varchar(50),
+  state_id INT REFERENCES states(state_id)
 );
 
 CREATE TABLE states (
@@ -28,11 +29,11 @@ CREATE TABLE states (
   state_code varchar(2)
 );
 
-CREATE TABLE locations (
-  location_id SERIAL PRIMARY KEY,
+CREATE TABLE addresses (
+  address_id SERIAL PRIMARY KEY,
+  address VARCHAR(50),
   location_nm varchar(50),
-  city_id INT REFERENCES cities(city_id),
-  state_id INT REFERENCES states(state_id)
+  city_id INT REFERENCES cities(city_id)
 );
 
 CREATE TABLE employees (
@@ -49,5 +50,6 @@ CREATE TABLE employee_hist (
   start_date DATE,
   end_date DATE,
   hiring_dept_id INT REFERENCES departments(dept_id),
-  location_id INT REFERENCES locations(location_id)
+  location_id INT REFERENCES locations(location_id),
+  salary_id INT REFERENCES salaries(salary_id)
 );
