@@ -27,14 +27,45 @@ GROUP BY dept_nm;
 
 -- Question 6: Write a query that returns current and past jobs (include employee name, job title, department, manager name, start and end date for position) for employee Toni Lembeck.
 SELECT
-  employee_nm, job_nm, dept_nm, start_date, end_date
+  emp.employee_nm, job_nm, dept_nm, man.employee_nm AS manager_nm, start_date, end_date
 FROM employee_hist hist
 JOIN employees emp ON emp.employee_id = hist.employee_id
+JOIN employees man ON man.employee_id = hist.manager_id
 JOIN departments dept ON dept.dept_id = hist.hiring_dept_id
 JOIN jobs ON jobs.job_id = hist.job_id
-WHERE employee_nm = 'Toni Lembeck';
+WHERE emp.employee_nm = 'Toni Lembeck';
 
 -- Question 7: Describe how you would apply table security to restrict access to employee salaries using an SQL server.
 -- ** answer in a short paragraph, how you would apply table security to restrict access to employee salaries
 
 -- To restrict access to the employee salaries table I would only provide read permissions to users who were administrators or in the HR department
+
+-- Create a view that returns all employee attributes; results should resemble initial Excel file
+CREATE OR REPLACE VIEW employee_attr AS (
+  SELECT DISTINCT
+    emps.employee_id,
+    emps.employee_nm,
+    emps.email,
+    jobs.job_nm AS job_title,
+    sal.salary,
+    dept.dept_nm,
+    man.employee_nm AS manager_nm,
+    hist.start_date,
+    hist.end_date,
+    loc.location_nm,
+    add.address,
+    cities.city_nm,
+    states.state_code,
+    edu.edu_lvl
+  FROM employee_hist hist
+  JOIN employees emps ON emps.employee_id = hist.employee_id
+  JOIN jobs ON jobs.job_id = hist.job_id
+  JOIN salaries sal ON sal.salary_id = hist.salary_id
+  JOIN departments dept ON dept.dept_id = hist.hiring_dept_id
+  JOIN employees man ON man.employee_id = hist.manager_id
+  JOIN addresses add ON add.address_id = hist.address_id
+  JOIN cities ON cities.city_id = add.city_id
+  JOIN states ON states.state_id = cities.state_id
+  JOIN locations loc ON loc.location_id = states.location_id
+  JOIN education edu ON edu.edu_id = emps.education_id
+);
