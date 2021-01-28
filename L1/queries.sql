@@ -50,6 +50,7 @@ CREATE OR REPLACE VIEW employee_attr AS (
     sal.salary,
     dept.dept_nm,
     man.employee_nm AS manager_nm,
+    hist.hire_date,
     hist.start_date,
     hist.end_date,
     loc.location_nm,

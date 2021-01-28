@@ -64,6 +64,7 @@ CREATE TABLE employee_hist (
   id SERIAL PRIMARY KEY,
   employee_id VARCHAR(8) REFERENCES employees(employee_id),
   job_id INT REFERENCES jobs(job_id),
+  hire_date DATE,
   start_date DATE,
   end_date DATE,
   manager_id VARCHAR(8) REFERENCES employees(employee_id),

@@ -37,10 +37,11 @@ SELECT DISTINCT stg.Emp_ID, stg.Emp_NM, stg.Email, education.edu_id FROM proj_st
 JOIN education ON education.edu_lvl = stg.education_lvl
 ;
 
-Insert into employee_hist(employee_id, job_id, start_date, end_date, manager_id, hiring_dept_id, address_id, salary_id)
+Insert into employee_hist(employee_id, job_id, hire_date, start_date, end_date, manager_id, hiring_dept_id, address_id, salary_id)
 SELECT DISTINCT
   stg.Emp_ID,
   jobs.job_id,
+  stg.hire_dt,
   stg.start_dt,
   stg.end_dt,
   emp.employee_id,
