@@ -1,38 +1,36 @@
 -- Load data from ODS to data warehouse
 
-DROP TABLE IF EXISTS complex;
-DROP TABLE IF EXISTS employees;
-DROP TABLE IF EXISTS facilities;
-DROP TABLE IF EXISTS high_touch_areas;
-DROP TABLE IF EXISTS rooms;
-DROP TABLE IF EXISTS frequency;
-DROP TABLE IF EXISTS floors;
-DROP TABLE IF EXISTS cleaning_schedule;
-DROP TABLE IF EXISTS protocols;
+DROP TABLE IF EXISTS dim_complex;
+DROP TABLE IF EXISTS dim_employees;
+DROP TABLE IF EXISTS dim_facilities;
+DROP TABLE IF EXISTS dim_high_touch_areas;
+DROP TABLE IF EXISTS dim_rooms;
+DROP TABLE IF EXISTS dim_frequency;
+DROP TABLE IF EXISTS dim_floors;
+DROP TABLE IF EXISTS dim_cleaning_schedule;
+DROP TABLE IF EXISTS dim_protocols;
 
-CREATE TABLE complex (
+CREATE TABLE dim_complex (
   complex_id integer not null unique,
-  complex_name string,
-  constraint pk_complex_id primary key(complex_id)
+  complex_name string
 );
 
-INSERT INTO complex
+INSERT INTO dim_complex
 SELECT
     complex_id,
     complex_name
 FROM ods.complex;
 
 
-CREATE TABLE employees (
+CREATE TABLE dim_employees (
   employee_id integer not null unique,
   first_name string,
   last_name string,
   badge_status string,
-  remote_office string,
-  constraint pk_employee_id primary key (employee_id)
+  remote_office string
 );
 
-INSERT INTO employees
+INSERT INTO dim_employees
 SELECT
     employee_id,
     first_name,
@@ -41,16 +39,14 @@ SELECT
     remote_office
 FROM ods.employees;
 
-CREATE TABLE facilities (
+CREATE TABLE dim_facilities (
   building_id integer not null unique,
   building_name string,
   sqft string,
-  complex_id integer,
-  constraint pk_building_id primary key (building_id),
-  constraint fk_complex_id foreign key (complex_id) references complex(complex_id)
+  complex_id integer
 );
 
-INSERT INTO facilities
+INSERT INTO dim_facilities
 SELECT
   building_id,
   building_name,
@@ -58,10 +54,9 @@ SELECT
   complex_id
 FROM ods.facilities;
 
-CREATE TABLE high_touch_areas (
+CREATE TABLE dim_high_touch_areas (
   spot_id integer not null unique,
-  high_touch_areas string,
-  constraint pk_spot_id primary key (spot_id)
+  high_touch_areas string
 );
 
 INSERT INTO high_touch_areas
@@ -70,29 +65,26 @@ SELECT
   high_touch_areas
 FROM ods.high_touch_areas;
 
-CREATE TABLE protocols (
+CREATE TABLE dim_protocols (
   protocol_id integer not null unique,
   step_id integer,
-  step_name string,
-  constraint pk_protocol_id primary key(protocol_id)
+  step_name string
 );
 
-INSERT INTO protocols
+INSERT INTO dim_protocols
 SELECT
   protocol_id,
   step_id,
   step_name
 FROM ods.protocols;
 
-CREATE TABLE floors (
+CREATE TABLE dim_floors (
   floor_id integer not null unique,
   floor_name string,
-  building_id integer,
-  constraint pk_floor_id primary key (floor_id),
-  constraint fk_building_id foreign key (building_id) references facilities(building_id)
+  building_id integer
 );
 
-INSERT INTO floors
+INSERT INTO dim_floors
 SELECT
   floor_id,
   floor_name,
@@ -100,19 +92,16 @@ SELECT
 FROM ods.floors;
 
 
-CREATE TABLE rooms (
+CREATE TABLE dim_rooms (
   room_id integer not null unique,
   room_name string,
   floor_id integer,
   building_id integer,
   total_area integer,
-  area_cleaned integer,
-  constraint pk_room_id primary key (room_id),
-  constraint fk_floor_id foreign key (floor_id) references floors(floor_id),
-  constraint fk_building_id foreign key (building_id) references facilities(building_id)
+  area_cleaned integer
 );
 
-INSERT INTO rooms
+INSERT INTO dim_rooms
 SELECT
   room_id,
   room_name,
@@ -123,53 +112,86 @@ SELECT
 FROM ods.rooms;
 
 
-CREATE TABLE frequency (
+CREATE TABLE dim_frequency (
   frequency_id integer not null unique,
   frequency string,
-  building_id integer,
-  constraint pk_frequency_id primary key (frequency_id),
-  constraint fk_building_id foreign key (building_id) references facilities(building_id)
+  building_id integer
 );
 
-INSERT INTO frequency
+INSERT INTO dim_frequency
 SELECT
   frequency_id,
   frequency,
   building_id
 FROM ods.frequency;
 
-CREATE TABLE cleaning_schedule (
+CREATE TABLE fct_cleaning_schedule (
   transaction_id integer not null unique,
-  step_id integer,
-  cleaned_on string,
-  frequency_id integer,
-  building_id integer,
-  floor_id integer,
-  room_id integer,
   employee_id integer,
+  first_name string,
+  last_name string,
+  step_id integer,
+  step_name string,
   spot_id integer,
+  high_touch_area string,
+  frequency_id integer,
+  frequency integer,
+  room_id integer,
+  room_name string,
+  floor_id integer,
+  floor_name string,
+  building_id integer,
+  building_name string,
+  complex_id integer,
+  complex_name string,
+  sqft string,
+  total_area string,
+  cleaned_area string,
+  cleaned_on string,
   test_value number,
-  efficiency number,
+  efficiency number
   constraint pk_transaction_id primary key (transaction_id),
-  constraint fk_frequency_id foreign key (frequency_id) references frequency(frequency_id),
-  constraint fk_building_id foreign key (building_id) references facilities(building_id),
-  constraint fk_floor_id foreign key (floor_id) references floors(floor_id),
-  constraint fk_room_id foreign key (room_id) references rooms(room_id),
-  constraint fk_employee_id foreign key (employee_id) references employees(employee_id),
-  constraint fk_spot_id foreign key (spot_id) references high_touch_areas(spot_id)
+  constraint fk_frequency_id foreign key (frequency_id) references ods.frequency(frequency_id),
+  constraint fk_building_id foreign key (building_id) references ods.facilities(building_id),
+  constraint fk_floor_id foreign key (floor_id) references ods.floors(floor_id),
+  constraint fk_room_id foreign key (room_id) references ods.rooms(room_id),
+  constraint fk_employee_id foreign key (employee_id) references ods.employees(employee_id),
+  constraint fk_spot_id foreign key (spot_id) references ods.high_touch_areas(spot_id)
+  constraint fk_complex_id foreign key (complex_id) references ods.complex(complex_id)
 );
 
-INSERT INTO cleaning_schedule
-SELECT
-  transaction_id,
-  step_id,
-  cleaned_on,
-  frequency_id,
-  building_id,
-  floor_id,
-  room_id,
-  employee_id,
-  spot_id,
-  test_value,
-  efficiency
-FROM ods.cleaning_schedule;
+INSERT INTO fct_cleaning_schedule
+  SELECT DISTINCT
+  e.employee_id,
+  e.first_name,
+  e.last_name,
+  p.step_id,
+  p.step_name,
+  hta.spot_id,
+  hta.high_touch_area,
+  fr.frequency_id,
+  fr.frequency,
+  c.complex_id,
+  c.complex_name,
+  fa.building_id,
+  fa.building_name,
+  fl.floor_id,
+  fl.floor_name,
+  r.room_id,
+  r.room_name,
+  fa.sqft,
+  fa.total_area,
+  sched.cleaned_area,
+  sched.cleaned_on,
+  sched.test_value,
+  sched.efficiency
+FROM ods.cleaning_schedule sched
+JOIN ods.employees e ON e.employee_id = sched.employee_id
+JOIN ods.protocols p ON p.step_id = sched.step_id
+JOIN ods.high_touch_areas hta ON hta.spot_id = sched.spot_id
+JOIN ods.frequency fr ON fr.frequency_id = sched.frequency_id
+JOIN ods.complex c ON c.complex_id = sched.complex_id
+JOIN ods.facilities fa ON fa.building_id = sched.building_id
+JOIN ods.floors ON fl fl.floor_id = sched.floor_id
+JOIN ods.rooms r ON r.room_id = sched.room_id
+;
