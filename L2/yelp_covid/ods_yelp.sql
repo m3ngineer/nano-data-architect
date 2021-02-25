@@ -63,10 +63,10 @@ create or replace table yelp_reviews (
   useful numeric,
   funny numeric,
   cool numeric,
-  text numeric,
-  date timestamp
-  constraint pk_review_id primary key(review_id),
-  constraint fk_review_id foreign key(business_id) references (business_id)
+  text string,
+  date timestamp,
+  constraint pk_review_id primary key (review_id),
+  constraint fk_business_id foreign key (business_id) references yelp_business(business_id)
 );
 
 INSERT INTO yelp_reviews
@@ -77,6 +77,7 @@ SELECT
     SRC:stars,
     SRC:useful,
     SRC:funny,
+    SRC:cool,
     SRC:text,
     SRC:date
 FROM yelp_reviews_raw;
