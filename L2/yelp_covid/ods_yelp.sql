@@ -53,3 +53,30 @@ SELECT
     SRC:categories,
     SRC:hours
 FROM yelp_business_raw;
+
+
+create or replace table yelp_reviews (
+  review_id string not null unique,
+  user_id string,
+  business_id string,
+  stars numeric,
+  useful numeric,
+  funny numeric,
+  cool numeric,
+  text numeric,
+  date timestamp
+  constraint pk_review_id primary key(review_id),
+  constraint fk_review_id foreign key(business_id) references (business_id)
+);
+
+INSERT INTO yelp_reviews
+SELECT
+    SRC:review_id,
+    SRC:user_id,
+    SRC:business_id,
+    SRC:stars,
+    SRC:useful,
+    SRC:funny,
+    SRC:text,
+    SRC:date
+FROM yelp_reviews_raw;
