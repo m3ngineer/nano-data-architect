@@ -54,7 +54,7 @@ SELECT
 FROM staging.yelp_business_raw;
 
 --  Yelp Reviews
-create or replace table yelp_reviews (
+create or replace table yelp_review (
   review_id string not null unique,
   user_id string,
   business_id string,
@@ -68,7 +68,7 @@ create or replace table yelp_reviews (
   constraint fk_business_id foreign key (business_id) references yelp_business(business_id)
 );
 
-INSERT INTO yelp_reviews
+INSERT INTO yelp_review
 SELECT
     SRC:review_id,
     SRC:user_id,
@@ -79,7 +79,7 @@ SELECT
     SRC:cool,
     SRC:text,
     SRC:date
-FROM staging.yelp_reviews_raw;
+FROM staging.yelp_review_raw;
 
 --  Yelp Checkin
 create or replace table yelp_checkin (
