@@ -1,5 +1,5 @@
 create database Yelp;
-create schema  Public;
+create schema STAGING;
 create or replace file format csv_format_weather
   type = csv
   FIELD_DELIMITER = ','
