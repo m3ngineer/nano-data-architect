@@ -1,10 +1,10 @@
 create database Yelp;
-create schema  Public;
+create schema STAGING;
 create or replace file format json_format
   type = json
   ;
 
-create or replace stage staging file_format = json_format;
+create or replace stage staging;
 
 -- Create a target table for the JSON data
 create or replace table yelp_business_raw (

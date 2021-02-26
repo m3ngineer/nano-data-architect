@@ -1,10 +1,8 @@
 create database Yelp;
-create schema  Public;
+create schema ODS;
 create or replace file format json_format
   type = json
-  ;
-
-create or replace stage ods file_format = json_format;
+;
 
 -- Load data from staging to ODS
 
@@ -52,7 +50,7 @@ SELECT
     SRC:attributes:RestaurantsPriceRange2,
     SRC:categories,
     SRC:hours
-FROM yelp_business_raw;
+FROM staging.yelp_business_raw;
 
 
 create or replace table yelp_reviews (
@@ -80,4 +78,4 @@ SELECT
     SRC:cool,
     SRC:text,
     SRC:date
-FROM yelp_reviews_raw;
+FROM staging.yelp_reviews_raw;
