@@ -206,14 +206,14 @@ FROM ods.weather_temperature
 -- Weather Precipitation
 create or replace table dim_weather_precipitation (
   date date not null unique,
-  precipitation string,
+  precipitation numeric,
   precipitation_normal numeric
 );
 
 INSERT INTO dim_weather_precipitation
 SELECT
   date,
-  precipitation,
+  (CASE WHEN precipitation = 'T' THEN NULL ELSE precipitation END) AS precipitation,
   precipitation_normal
 FROM ods.weather_precipitation
 ;
