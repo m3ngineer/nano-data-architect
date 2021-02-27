@@ -262,13 +262,12 @@ create or replace table fct_yelp_review_weather (
   user_fans numeric,
   user_average_stars numeric,
   -- weather
-  precipitation string,
+  precipitation numeric,
   precipitation_normal numeric,
   temp_min numeric,
   temp_max numeric,
   temp_normal_min numeric,
   temp_normal_max numeric
-
 );
 
 INSERT INTO fct_yelp_review_weather
@@ -321,9 +320,9 @@ SELECT
   wt.max AS temp_max,
   wt.normal_min AS temp_normal_min,
   wt.normal_max AS temp_normal_max
-FROM ods.yelp_business yb
-JOIN ods.yelp_review yr ON yr.business_id = yb.business_id
-JOIN ods.yelp_user yu ON yu.user_id = yr.user_id
-JOIN ods.weather_temperature wt ON wt.date = yr.date::DATE
-JOIN ods.weather_precipitation wp ON wp.date = yr.date::DATE
+FROM dwh.dim_yelp_business yb
+JOIN dwh.dim_yelp_review yr ON yr.business_id = yb.business_id
+JOIN dwh.dim_yelp_user yu ON yu.user_id = yr.user_id
+JOIN dwh.dim_weather_temperature wt ON wt.date = yr.date::DATE
+JOIN dwh.dim_weather_precipitation wp ON wp.date = yr.date::DATE
 ;
