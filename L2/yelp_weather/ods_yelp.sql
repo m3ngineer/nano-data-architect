@@ -32,25 +32,25 @@ create or replace table yelp_business (
 
 INSERT INTO yelp_business
 SELECT
-    SRC:business_id,
-    SRC:name,
-    SRC:address,
-    SRC:city,
-    SRC:state,
-    SRC:postal_code,
-    SRC:latitude,
-    SRC:longitude,
-    SRC:stars,
-    SRC:review_count,
-    SRC:is_open,
-    SRC:attributes:BusinessAcceptsCreditCards,
-    SRC:attributes:BikeParking,
-    SRC:attributes:GoodForKids,
-    SRC:attributes:BusinessParking,
-    SRC:attributes:ByAppointmentOnly,
-    SRC:attributes:RestaurantsPriceRange2,
-    SRC:categories,
-    SRC:hours
+    PARSE_JSON(SRC):business_id,
+    PARSE_JSON(SRC):name,
+    PARSE_JSON(SRC):address,
+    PARSE_JSON(SRC):city,
+    PARSE_JSON(SRC):state,
+    PARSE_JSON(SRC):postal_code,
+    PARSE_JSON(SRC):latitude,
+    PARSE_JSON(SRC):longitude,
+    PARSE_JSON(SRC):stars,
+    PARSE_JSON(SRC):review_count,
+    PARSE_JSON(SRC):is_open,
+    PARSE_JSON(SRC):attributes:BusinessAcceptsCreditCards,
+    PARSE_JSON(SRC):attributes:BikeParking,
+    PARSE_JSON(SRC):attributes:GoodForKids,
+    PARSE_JSON(SRC):attributes:BusinessParking,
+    PARSE_JSON(SRC):attributes:ByAppointmentOnly,
+    PARSE_JSON(SRC):attributes:RestaurantsPriceRange2,
+    PARSE_JSON(SRC):categories,
+    PARSE_JSON(SRC):hours
 FROM staging.yelp_business_raw;
 
 --  Yelp Reviews
@@ -70,15 +70,15 @@ create or replace table yelp_review (
 
 INSERT INTO yelp_review
 SELECT
-    SRC:review_id,
-    SRC:user_id,
-    SRC:business_id,
-    SRC:stars,
-    SRC:useful,
-    SRC:funny,
-    SRC:cool,
-    SRC:text,
-    SRC:date
+    PARSE_JSON(SRC):review_id,
+    PARSE_JSON(SRC):user_id,
+    PARSE_JSON(SRC):business_id,
+    PARSE_JSON(SRC):stars,
+    PARSE_JSON(SRC):useful,
+    PARSE_JSON(SRC):funny,
+    PARSE_JSON(SRC):cool,
+    PARSE_JSON(SRC):text,
+    PARSE_JSON(SRC):date
 FROM staging.yelp_review_raw;
 
 --  Yelp Checkin
@@ -91,8 +91,8 @@ create or replace table yelp_checkin (
 
 INSERT INTO yelp_checkin
 SELECT
-    SRC:business_id,
-    SRC:date
+    PARSE_JSON(SRC):business_id,
+    PARSE_JSON(SRC):date
 FROM staging.yelp_checkin_raw;
 
 --  Yelp User
@@ -124,28 +124,28 @@ create or replace table yelp_user (
 
 INSERT INTO yelp_user
 SELECT
-  SRC:user_id,
-  SRC:name,
-  SRC:review_count,
-  SRC:yelping_since,
-  SRC:useful,
-  SRC:funny,
-  SRC:cool,
-  SRC:elite,
-  SRC:friends,
-  SRC:fans,
-  SRC:average_stars,
-  SRC:compliment_hot,
-  SRC:compliment_more,
-  SRC:compliment_profile,
-  SRC:compliment_cute,
-  SRC:compliment_list,
-  SRC:compliment_note,
-  SRC:compliment_plain,
-  SRC:compliment_cool,
-  SRC:compliment_funny,
-  SRC:compliment_writer,
-  SRC:compliment_photos
+  PARSE_JSON(SRC):user_id,
+  PARSE_JSON(SRC):name,
+  PARSE_JSON(SRC):review_count,
+  PARSE_JSON(SRC):yelping_since,
+  PARSE_JSON(SRC):useful,
+  PARSE_JSON(SRC):funny,
+  PARSE_JSON(SRC):cool,
+  PARSE_JSON(SRC):elite,
+  PARSE_JSON(SRC):friends,
+  PARSE_JSON(SRC):fans,
+  PARSE_JSON(SRC):average_stars,
+  PARSE_JSON(SRC):compliment_hot,
+  PARSE_JSON(SRC):compliment_more,
+  PARSE_JSON(SRC):compliment_profile,
+  PARSE_JSON(SRC):compliment_cute,
+  PARSE_JSON(SRC):compliment_list,
+  PARSE_JSON(SRC):compliment_note,
+  PARSE_JSON(SRC):compliment_plain,
+  PARSE_JSON(SRC):compliment_cool,
+  PARSE_JSON(SRC):compliment_funny,
+  PARSE_JSON(SRC):compliment_writer,
+  PARSE_JSON(SRC):compliment_photos
 FROM staging.yelp_user_raw;
 
 -- Yelp Tip
@@ -162,11 +162,11 @@ create or replace table yelp_tip (
 
 INSERT INTO yelp_tip
 SELECT
-  SRC:user_id,
-  SRC:business_id,
-  SRC:text,
-  SRC:date,
-  SRC:compliment_count
+  PARSE_JSON(SRC):user_id,
+  PARSE_JSON(SRC):business_id,
+  PARSE_JSON(SRC):text,
+  PARSE_JSON(SRC):date,
+  PARSE_JSON(SRC):compliment_count
 FROM staging.yelp_tip_raw;
 
 -- Yelp Covid Features
@@ -186,13 +186,13 @@ create or replace table yelp_covid_features (
 
 INSERT INTO yelp_covid_features
 SELECT
-    SRC:business_id,
-    SRC:highlights,
-    SRC:delivery_or_takeout,
-    SRC:grubhub_enabled,
-    SRC:call_to_action_enabled,
-    SRC:request_quote_enabled,
-    SRC:covid_banner,
-    SRC:temporary_closed_until,
-    SRC:virtual_services
+    PARSE_JSON(SRC):business_id,
+    PARSE_JSON(SRC):highlights,
+    PARSE_JSON(SRC):delivery_or_takeout,
+    PARSE_JSON(SRC):grubhub_enabled,
+    PARSE_JSON(SRC):call_to_action_enabled,
+    PARSE_JSON(SRC):request_quote_enabled,
+    PARSE_JSON(SRC):covid_banner,
+    PARSE_JSON(SRC):temporary_closed_until,
+    PARSE_JSON(SRC):virtual_services
 FROM staging.yelp_covid_features_raw;
